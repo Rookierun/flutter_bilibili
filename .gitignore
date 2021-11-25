@@ -6,3 +6,4 @@ bin/
 gen/
 out/
 .dart_tool
+.packages

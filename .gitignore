@@ -1,0 +1,8 @@
+.idea
+*.iml
+.gradle/
+build/
+bin/
+gen/
+out/
+.dart_tool

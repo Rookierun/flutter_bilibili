@@ -1,13 +1,23 @@
 import 'package:flutter_bilibili/http/request/base_request.dart';
 
 class HiNet {
-  static late HiNet _instance = HiNet._();
+  static final HiNet _instance = HiNet._internal();
 
-  HiNet._();
-
+  factory HiNet() {
+    return _instance;
+  }
+  HiNet._internal();
   static HiNet getInstance() {
     return _instance;
   }
+  //
+  // static late HiNet _instance = HiNet._();
+  //
+  // HiNet._();
+  //
+  // static HiNet getInstance() {
+  //   return _instance;
+  // }
 
   Future fire(BaseRequest request) async {
     var response = await send(request);

@@ -7,9 +7,6 @@ class HiNet {
     return _instance;
   }
   HiNet._internal();
-  static HiNet getInstance() {
-    return _instance;
-  }
   //
   // static late HiNet _instance = HiNet._();
   //

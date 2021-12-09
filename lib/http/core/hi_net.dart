@@ -1,3 +1,6 @@
+import 'package:flutter_bilibili/http/core/dio_adapter.dart';
+import 'package:flutter_bilibili/http/core/hi_error.dart';
+import 'package:flutter_bilibili/http/core/hi_net_adapter.dart';
 import 'package:flutter_bilibili/http/request/base_request.dart';
 
 class HiNet {
@@ -17,10 +20,39 @@ class HiNet {
   // }
 
   Future fire(BaseRequest request) async {
-    var response = await send(request);
-    var result = response['data'];
+    HiNetResponse? response;
+    var error;
+    try {
+      response = await send(request);
+    } on HiNetError catch (e) {
+      error = e;
+      printLog(e.data.runtimeType);
+      printLog(response.runtimeType);
+      // response = e.data;//这里不知道为啥不能这样赋值
+
+      printLog(e.message);
+    } catch (e) {
+      error = e;
+      printLog(e);
+    }
+    if (response == null) {
+      printLog(error);
+      return null;
+    }
+    var result = response.data;
     printLog(result);
-    return result;
+    var status = response == null ? -1 : response.statusCode;
+    switch (status) {
+      case 200:
+        return result;
+      case 401:
+        throw NeedLogin();
+      case 403:
+        throw NeedAuth(result.toString(), data: result);
+      default:
+        throw HiNetError(status == null ? -1 : status, result.toString(),
+            data: result);
+    }
   }
 
   Future<dynamic> send<T>(BaseRequest request) async {
@@ -28,10 +60,7 @@ class HiNet {
     printLog('method:${request.httpMethod()}');
     request.addHeader("token", "123");
     printLog("header:${request.header}");
-    return Future.value({
-      "statusCode": 200,
-      "data": {"code": 0, "message": 'success'}
-    });
+    return DioAdapter().send(request);
   }
 
   void printLog(log) {

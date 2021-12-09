@@ -8,14 +8,14 @@ abstract class HiNetAdapter {
 
 /// 统一网络层返回格式
 class HiNetResponse<T> {
-  T data;
-  BaseRequest request;
-  int statusCode;
-  String statusMessage;
+  BaseRequest? request;
+  late T data;
+  int? statusCode;
+  String? statusMessage;
   dynamic extra;
 
-  HiNetResponse(this.data, this.request, this.statusCode, this.statusMessage,
-      {this.extra});
+  HiNetResponse(this.data,
+      {this.request, this.statusCode, this.statusMessage, this.extra});
 
   @override
   String toString() {

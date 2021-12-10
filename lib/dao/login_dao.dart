@@ -1,9 +1,12 @@
+import 'package:flutter_bilibili/db/hi_cache.dart';
 import 'package:flutter_bilibili/http/core/hi_net.dart';
 import 'package:flutter_bilibili/http/request/base_request.dart';
 import 'package:flutter_bilibili/http/request/login_request.dart';
 import 'package:flutter_bilibili/http/request/registration_request.dart';
 
 class LoginDao {
+  static String BOARDING_PASS = "boarding_pass";
+
   static login(String userName, String pwd) {
     return _send(userName, pwd);
   }
@@ -27,6 +30,13 @@ class LoginDao {
         .add("imoocId", imoocId)
         .add("orderId", orderId);
     var result = HiNet().fire(request);
+    // if (result["code"] != 0 && result["data"] != null) {
+    //   HiCache.getInstance().setString(BOARDING_PASS, result["data"]);
+    // }
     print("login_dao reponse:$result");
+  }
+
+  static getBoardingPass() {
+    return HiCache.getInstance().get(BOARDING_PASS);
   }
 }

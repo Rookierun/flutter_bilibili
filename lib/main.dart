@@ -3,6 +3,7 @@ import 'package:flutter_bilibili/dao/login_dao.dart';
 import 'package:flutter_bilibili/db/hi_cache.dart';
 import 'package:flutter_bilibili/http/core/hi_error.dart';
 import 'package:flutter_bilibili/page/registration_page.dart';
+import 'package:flutter_bilibili/util/color.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,23 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     HiCache.preInit();
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: RegistrationPage(),
-      ),
+    return MaterialApp(
+      title: "FlutterDemo",
+      theme: ThemeData(primarySwatch: white),
+      home: const RegistrationPage(),
     );
   }
 

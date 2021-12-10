@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bilibili/dao/login_dao.dart';
+import 'package:flutter_bilibili/db/hi_cache.dart';
+import 'package:flutter_bilibili/http/core/hi_error.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    HiCache.preInit();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -108,7 +111,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _testLogin() async {
-    var result = await LoginDao.login("userName", "pwd");
-    print("testLogin:$result");
+    try {
+      var result = await LoginDao.login("jvadd", "dddd112002");
+      // var result = await LoginDao.registration("123", "456", "123", "356");
+      print("testLogin:$result");
+    } on NeedAuth catch (e) {
+      print(e);
+    } on HiNetError catch (e) {
+      print(e);
+    }
   }
 }

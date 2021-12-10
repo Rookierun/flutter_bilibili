@@ -44,7 +44,10 @@ abstract class BaseRequest {
   }
 
   //header相关
-  Map<String, dynamic> header = {};
+  Map<String, dynamic> header = {
+    'course-flag': 'fa',
+    'auth-token': 'MjAyMc0wNi0yMyAwMzoyNTowMQ==fa'
+  };
   BaseRequest addHeader(String key, Object value) {
     header[key] = value.toString();
     return this;

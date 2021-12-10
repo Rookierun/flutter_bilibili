@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bilibili/http/core/hi_net.dart';
-import 'package:flutter_bilibili/http/request/base_request.dart';
-import 'package:flutter_bilibili/http/request/test_request.dart';
+import 'package:flutter_bilibili/dao/login_dao.dart';
 
 void main() {
   runApp(const MyApp());
@@ -54,11 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() async {
-    BaseRequest request = TestRequest();
-    request.add("aaa", "ddd").add("bbb", 444).add("requestPrams", "111");
-    var result = await HiNet().fire(request);
-    print("${HiNet().hashCode},$result");
-    print("${HiNet().hashCode}");
+    _testLogin();
   }
 
   @override
@@ -111,5 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  void _testLogin() async {
+    var result = await LoginDao.login("userName", "pwd");
+    print("testLogin:$result");
   }
 }

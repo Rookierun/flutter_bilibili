@@ -23,7 +23,7 @@ class HiNet {
     HiNetResponse? response;
     var error;
     try {
-      response = await send(request);
+      response = await _send(request);
     } on HiNetError catch (e) {
       error = e;
       printLog(e.data.runtimeType);
@@ -55,7 +55,7 @@ class HiNet {
     }
   }
 
-  Future<dynamic> send<T>(BaseRequest request) async {
+  Future<dynamic> _send<T>(BaseRequest request) async {
     printLog('url:${request.url()}');
     printLog('method:${request.httpMethod()}');
     request.addHeader("token", "123");

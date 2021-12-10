@@ -3,10 +3,10 @@ import 'package:flutter_bilibili/util/color.dart';
 
 class LoginButton extends StatefulWidget {
   final String title;
-  final bool enable;
+  bool enable = true;
   final VoidCallback? onPressed;
 
-  const LoginButton(this.title, {Key? key, this.enable = true, this.onPressed})
+  LoginButton(this.title, {Key? key, this.enable = true, this.onPressed})
       : super(key: key);
 
   @override

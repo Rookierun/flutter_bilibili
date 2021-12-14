@@ -1,65 +1,95 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bilibili/dao/login_dao.dart';
-import 'package:flutter_bilibili/db/hi_cache.dart';
-import 'package:flutter_bilibili/http/core/hi_error.dart';
-import 'package:flutter_bilibili/page/login_page.dart';
-import 'package:flutter_bilibili/util/color.dart';
+import 'package:flutter_bilibili/page/home_page.dart';
+import 'package:flutter_bilibili/page/video_detail_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const BiliApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class BiliApp extends StatefulWidget {
+  const BiliApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  _BiliAppState createState() => _BiliAppState();
+}
+
+class _BiliAppState extends State<BiliApp> {
+  final BiliRouteDelegate _delegate = BiliRouteDelegate();
+  final BiliRouteInformationParser _parser = BiliRouteInformationParser();
   @override
   Widget build(BuildContext context) {
+    var widget = Router(
+      routeInformationParser: _parser,
+      routerDelegate: _delegate,
+      routeInformationProvider: PlatformRouteInformationProvider(
+          initialRouteInformation: const RouteInformation(location: "/")),
+    );
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: widget,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
+///路由代理类
+class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  final GlobalKey<NavigatorState> navigatorKey;
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  var videoModel;
 
-  void _incrementCounter() async {
-    _testLogin();
-  }
+  late BiliRoutePath path;
 
+  List<MaterialPage> pages = [];
+
+  BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
-    HiCache.preInit();
-    return MaterialApp(
-      title: "FlutterDemo",
-      theme: ThemeData(primarySwatch: white),
-      home: LoginPage(),
+    pages = [
+      pageWrap(HomePage(
+        onJumpToDetail: (videoModel) {
+          this.videoModel = videoModel;
+          notifyListeners();
+        },
+      )),
+      if (videoModel != null) pageWrap(VideoDetailPage(videoModel))
+    ];
+    return Navigator(
+      key: navigatorKey,
+      pages: pages,
+      onPopPage: (route, result) {
+        return (route.didPop(result));
+      },
     );
   }
 
-  void _testLogin() async {
-    try {
-      var result = await LoginDao.login("jvadd", "dddd112002");
-      // var result = await LoginDao.registration("123", "456", "123", "356");
-      print("testLogin:$result");
-    } on NeedAuth catch (e) {
-      print(e);
-    } on HiNetError catch (e) {
-      print(e);
+  @override
+  Future<void> setNewRoutePath(BiliRoutePath path) async {
+    this.path = path;
+  }
+}
+
+///可缺省，主要应用于web，持有RouteInformationProvider提供的RouteInformation，可以将其解析为我们定义的数据类
+class BiliRouteInformationParser extends RouteInformationParser<BiliRoutePath> {
+  @override
+  Future<BiliRoutePath> parseRouteInformation(
+      RouteInformation routeInformation) async {
+    final uri = Uri.parse(routeInformation.location!);
+    print("uri:$uri");
+    if (uri.pathSegments.isEmpty) {
+      return BiliRoutePath.home();
     }
+    return BiliRoutePath.detail();
   }
+}
+
+///定义路由数据
+class BiliRoutePath {
+  final String location;
+  BiliRoutePath.home() : location = "/";
+  BiliRoutePath.detail() : location = "/detail";
+}
+
+pageWrap(Widget child) {
+  return MaterialPage(key: ValueKey(child.hashCode), child: child);
 }

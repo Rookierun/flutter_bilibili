@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bilibili/widget/app_bar.dart';
 import 'package:flutter_bilibili/widget/login_button.dart';
+import 'package:flutter_bilibili/widget/login_effect.dart';
 import 'package:flutter_bilibili/widget/login_input.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -27,6 +28,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       body: Container(
         child: ListView(
           children: [
+            LoginEffect(true),
             LoginInput(
               "用户名",
               "请输入用户名",

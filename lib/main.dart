@@ -101,13 +101,15 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     }
     tempPages = [...tempPages, page];
     pages = tempPages;
-    return Navigator(
-      key: navigatorKey,
-      pages: pages,
-      onPopPage: (route, result) {
-        return (route.didPop(result));
-      },
-    );
+    return WillPopScope(
+        child: Navigator(
+          key: navigatorKey,
+          pages: pages,
+          onPopPage: (route, result) {
+            return (route.didPop(result));
+          },
+        ),
+        onWillPop: () async => !await navigatorKey.currentState!.maybePop());
   }
 
   @override

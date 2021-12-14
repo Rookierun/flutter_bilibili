@@ -6,6 +6,7 @@ import 'package:flutter_bilibili/page/login_page.dart';
 import 'package:flutter_bilibili/page/registration_page.dart';
 import 'package:flutter_bilibili/page/video_detail_page.dart';
 import 'package:flutter_bilibili/util/color.dart';
+import 'package:flutter_bilibili/util/toast.dart';
 
 import 'navigator/hi_navigator.dart';
 
@@ -102,14 +103,26 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     tempPages = [...tempPages, page];
     pages = tempPages;
     return WillPopScope(
-        child: Navigator(
-          key: navigatorKey,
-          pages: pages,
-          onPopPage: (route, result) {
-            return (route.didPop(result));
-          },
-        ),
-        onWillPop: () async => !await navigatorKey.currentState!.maybePop());
+      child: Navigator(
+        key: navigatorKey,
+        pages: pages,
+        onPopPage: (route, result) {
+          if (route.settings is MaterialPage) {
+            if (!hasLogin) {
+              showWarnToast("请先登录");
+              return false;
+            }
+          }
+          bool didPop = (route.didPop(result));
+          if (!didPop) {
+            return false;
+          }
+          pages.removeLast();
+          return true;
+        },
+      ),
+      onWillPop: () async => !await navigatorKey.currentState!.maybePop(),
+    );
   }
 
   @override

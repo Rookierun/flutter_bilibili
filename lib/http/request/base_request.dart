@@ -34,7 +34,6 @@ abstract class BaseRequest {
     if (needLogin()) {
       addHeader(LoginDao.BOARDING_PASS, LoginDao.getBoardingPass());
     }
-    print('uri:${uri.toString()}');
     return uri.toString();
   }
 
@@ -51,7 +50,7 @@ abstract class BaseRequest {
   //header相关
   Map<String, dynamic> header = {
     'course-flag': 'fa',
-    'auth-token': 'MjAyMc0wNi0yMyAwMzoyNTowMQ==fa'
+    'auth-token': 'ZmEtMjAyMS0wNC0xMiAyMToyMjoyMC1mYQ==fa'
   };
   BaseRequest addHeader(String key, Object value) {
     header[key] = value.toString();

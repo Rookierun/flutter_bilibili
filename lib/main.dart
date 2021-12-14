@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bilibili/dao/login_dao.dart';
 import 'package:flutter_bilibili/db/hi_cache.dart';
 import 'package:flutter_bilibili/http/core/hi_error.dart';
-import 'package:flutter_bilibili/page/registration_page.dart';
+import 'package:flutter_bilibili/page/login_page.dart';
 import 'package:flutter_bilibili/util/color.dart';
 
 void main() {
@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       title: "FlutterDemo",
       theme: ThemeData(primarySwatch: white),
-      home: const RegistrationPage(),
+      home: LoginPage(),
     );
   }
 

@@ -9,13 +9,15 @@ class LoginInput extends StatefulWidget {
   final bool lineStretch; //分割线是否撑满
   final bool obscureText; //是否是密文，用于密码的输入
   final TextInputType keyboardType;
+  String? keyWord;
 
   LoginInput(this.title, this.hint,
       {this.onChanged,
       this.focusChanged,
       this.lineStretch = false,
       this.obscureText = false,
-      this.keyboardType = TextInputType.text}); //键盘类型，数字/字母/等等
+      this.keyboardType = TextInputType.text,
+      this.keyWord = ""}); //键盘类型，数字/字母/等等
 
   @override
   _LoginInputState createState() => _LoginInputState();
@@ -23,15 +25,16 @@ class LoginInput extends StatefulWidget {
 
 class _LoginInputState extends State<LoginInput> {
   final _focusNode = FocusNode();
+  TextEditingController _controller = TextEditingController();
   @override
   void initState() {
     super.initState();
     _focusNode.addListener(() {
-      print("Has focus:${_focusNode.hasFocus}");
       if (widget.focusChanged != null) {
         widget.focusChanged!(_focusNode.hasFocus);
       }
     });
+    _controller = TextEditingController(text: widget.keyWord);
   }
 
   @override
@@ -65,6 +68,7 @@ class _LoginInputState extends State<LoginInput> {
   _input() {
     return Expanded(
         child: TextField(
+      controller: _controller,
       focusNode: _focusNode,
       onChanged: widget.onChanged,
       obscureText: widget.obscureText,

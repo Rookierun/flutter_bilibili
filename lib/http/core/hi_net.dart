@@ -26,10 +26,7 @@ class HiNet {
       response = await _send(request);
     } on HiNetError catch (e) {
       error = e;
-      printLog(e.data.runtimeType);
-      printLog(response.runtimeType);
-      // response = e.data;//这里不知道为啥不能这样赋值
-
+      response = e.data; //这里不知道为啥不能这样赋值
       printLog(e.message);
     } catch (e) {
       error = e;
@@ -40,7 +37,7 @@ class HiNet {
       return null;
     }
     var result = response.data;
-    printLog(result);
+    printLog("hi-net success response:$result");
     var status = response == null ? -1 : response.statusCode;
     switch (status) {
       case 200:
@@ -56,10 +53,6 @@ class HiNet {
   }
 
   Future<dynamic> _send<T>(BaseRequest request) async {
-    printLog('url:${request.url()}');
-    printLog('method:${request.httpMethod()}');
-    request.addHeader("token", "123");
-    printLog("header:${request.header}");
     return DioAdapter().send(request);
   }
 

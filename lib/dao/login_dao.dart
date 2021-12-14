@@ -29,11 +29,11 @@ class LoginDao {
         .add("password", pwd)
         .add("imoocId", imoocId)
         .add("orderId", orderId);
-    var result = HiNet().fire(request);
-    // if (result["code"] != 0 && result["data"] != null) {
-    //   HiCache.getInstance().setString(BOARDING_PASS, result["data"]);
-    // }
-    print("login_dao reponse:$result");
+    var result = await HiNet().fire(request);
+    if (result["code"] == 0 && result["data"] != null) {
+      HiCache.getInstance().setString(BOARDING_PASS, result["data"]);
+    }
+    return result;
   }
 
   static getBoardingPass() {

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bilibili/dao/login_dao.dart';
+import 'package:flutter_bilibili/http/core/hi_error.dart';
+import 'package:flutter_bilibili/util/toast.dart';
 import 'package:flutter_bilibili/widget/app_bar.dart';
 import 'package:flutter_bilibili/widget/login_button.dart';
 import 'package:flutter_bilibili/widget/login_effect.dart';
@@ -28,7 +31,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       body: Container(
         child: ListView(
           children: [
-            LoginEffect(true),
+            LoginEffect(protect),
             LoginInput(
               "用户名",
               "请输入用户名",
@@ -49,12 +52,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   protect = focus;
                 });
               },
+              obscureText: true,
             ),
             LoginInput(
               "确认密码",
               "请再次输入密码",
               onChanged: (text) {
-                pwd = text;
+                rePwd = text;
                 checkInput();
               },
               focusChanged: (focus) {
@@ -62,6 +66,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   protect = focus;
                 });
               },
+              obscureText: true,
             ),
             LoginInput(
               "慕课网ID",
@@ -130,5 +135,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   ///开始注册
-  void send() {}
+  void send() async {
+    try {
+      var result =
+          await LoginDao.registration(userName!, pwd!, imoocId, orderId);
+      print(result);
+    } on NeedAuth catch (e) {
+      print(e);
+      showWarnToast(e.toString());
+    } on HiNetError catch (e) {
+      print(e);
+      showWarnToast(e.toString());
+    }
+  }
 }

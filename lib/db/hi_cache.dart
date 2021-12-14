@@ -60,7 +60,7 @@ class HiCache {
 
   T? get<T>(String key) {
     var result = prefs?.get(key);
-    print("$result");
+    print("HiCache:$result");
     if (result != null) {
       return result as T;
     }

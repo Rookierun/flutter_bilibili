@@ -53,6 +53,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
   BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
   RouteStatus get routeStatus {
+    hasLogin = LoginDao.getBoardingPass() != null;
     if (_routeStatus != RouteStatus.registration && !hasLogin) {
       return _routeStatus = RouteStatus.login;
     } else if (videoModel != null) {
@@ -89,7 +90,14 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
         },
       ));
     } else if (routeStatus == RouteStatus.login) {
-      page = pageWrap(LoginPage());
+      page = pageWrap(LoginPage(() {
+        //跳转注册
+        _routeStatus = RouteStatus.registration;
+        notifyListeners();
+      }, () {
+        _routeStatus = RouteStatus.home;
+        notifyListeners();
+      }));
     }
     tempPages = [...tempPages, page];
     pages = tempPages;

@@ -8,7 +8,9 @@ import 'package:flutter_bilibili/widget/login_effect.dart';
 import 'package:flutter_bilibili/widget/login_input.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+  final VoidCallback? onJumpToLogin;
+
+  const RegistrationPage({Key? key, this.onJumpToLogin}) : super(key: key);
 
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
@@ -25,9 +27,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar("注册", "登录", () {
-        print("跳转到登录页面");
-      }),
+      appBar: appBar("注册", "登录", widget.onJumpToLogin),
       body: Container(
         child: ListView(
           children: [
@@ -139,7 +139,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
     try {
       var result =
           await LoginDao.registration(userName!, pwd!, imoocId, orderId);
+
       print(result);
+      if (result['code'] == 0) {
+        print('注册成功');
+        showToast('注册成功');
+        if (widget.onJumpToLogin != null) {
+          widget.onJumpToLogin!();
+        }
+      } else {
+        print(result['msg']);
+        showWarnToast(result['msg']);
+      }
     } on NeedAuth catch (e) {
       print(e);
       showWarnToast(e.toString());

@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bilibili/dao/login_dao.dart';
+import 'package:flutter_bilibili/db/hi_cache.dart';
 import 'package:flutter_bilibili/page/home_page.dart';
+import 'package:flutter_bilibili/page/login_page.dart';
+import 'package:flutter_bilibili/page/registration_page.dart';
 import 'package:flutter_bilibili/page/video_detail_page.dart';
+import 'package:flutter_bilibili/util/color.dart';
+
+import 'navigator/hi_navigator.dart';
 
 void main() {
   runApp(const BiliApp());
@@ -15,17 +22,20 @@ class BiliApp extends StatefulWidget {
 
 class _BiliAppState extends State<BiliApp> {
   final BiliRouteDelegate _delegate = BiliRouteDelegate();
-  final BiliRouteInformationParser _parser = BiliRouteInformationParser();
   @override
   Widget build(BuildContext context) {
-    var widget = Router(
-      routeInformationParser: _parser,
-      routerDelegate: _delegate,
-      routeInformationProvider: PlatformRouteInformationProvider(
-          initialRouteInformation: const RouteInformation(location: "/")),
-    );
-    return MaterialApp(
-      home: widget,
+    return FutureBuilder<HiCache>(
+      ///预初始化
+      future: HiCache.preInit(),
+      builder: (BuildContext context, AsyncSnapshot<HiCache> snapshot) {
+        var widget = snapshot.connectionState == ConnectionState.done
+            ? Router(
+                routerDelegate: _delegate,
+              )
+            : const Scaffold(body: Center(child: CircularProgressIndicator()));
+        return MaterialApp(
+            home: widget, theme: ThemeData(primarySwatch: white));
+      },
     );
   }
 }
@@ -35,25 +45,54 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
-
   var videoModel;
-
-  late BiliRoutePath path;
-
   List<MaterialPage> pages = [];
+  RouteStatus _routeStatus = RouteStatus.home;
 
+  bool hasLogin = LoginDao.getBoardingPass() != null;
   BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+
+  RouteStatus get routeStatus {
+    if (_routeStatus != RouteStatus.registration && !hasLogin) {
+      return _routeStatus = RouteStatus.login;
+    } else if (videoModel != null) {
+      return _routeStatus = RouteStatus.detail;
+    } else {
+      return _routeStatus;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    pages = [
-      pageWrap(HomePage(
+    //管理路由堆栈
+    var index = getPageIndex(pages, routeStatus);
+    List<MaterialPage> tempPages = pages;
+    if (index != -1) {
+      //当前页面在堆栈中已经存在
+      tempPages = tempPages.sublist(0, index);
+    }
+    var page;
+    if (routeStatus == RouteStatus.home) {
+      page = pageWrap(HomePage(
         onJumpToDetail: (videoModel) {
           this.videoModel = videoModel;
           notifyListeners();
         },
-      )),
-      if (videoModel != null) pageWrap(VideoDetailPage(videoModel))
-    ];
+      ));
+    } else if (routeStatus == RouteStatus.detail) {
+      page = pageWrap(VideoDetailPage(videoModel));
+    } else if (routeStatus == RouteStatus.registration) {
+      page = pageWrap(RegistrationPage(
+        onJumpToLogin: () {
+          _routeStatus = RouteStatus.login;
+          notifyListeners();
+        },
+      ));
+    } else if (routeStatus == RouteStatus.login) {
+      page = pageWrap(LoginPage());
+    }
+    tempPages = [...tempPages, page];
+    pages = tempPages;
     return Navigator(
       key: navigatorKey,
       pages: pages,
@@ -64,23 +103,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
   }
 
   @override
-  Future<void> setNewRoutePath(BiliRoutePath path) async {
-    this.path = path;
-  }
-}
-
-///可缺省，主要应用于web，持有RouteInformationProvider提供的RouteInformation，可以将其解析为我们定义的数据类
-class BiliRouteInformationParser extends RouteInformationParser<BiliRoutePath> {
-  @override
-  Future<BiliRoutePath> parseRouteInformation(
-      RouteInformation routeInformation) async {
-    final uri = Uri.parse(routeInformation.location!);
-    print("uri:$uri");
-    if (uri.pathSegments.isEmpty) {
-      return BiliRoutePath.home();
-    }
-    return BiliRoutePath.detail();
-  }
+  Future<void> setNewRoutePath(BiliRoutePath configuration) async {}
 }
 
 ///定义路由数据
@@ -88,8 +111,4 @@ class BiliRoutePath {
   final String location;
   BiliRoutePath.home() : location = "/";
   BiliRoutePath.detail() : location = "/detail";
-}
-
-pageWrap(Widget child) {
-  return MaterialPage(key: ValueKey(child.hashCode), child: child);
 }

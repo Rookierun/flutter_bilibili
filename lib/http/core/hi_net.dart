@@ -37,7 +37,6 @@ class HiNet {
       return null;
     }
     var result = response.data;
-    printLog("hi-net success response:$result");
     var status = response == null ? -1 : response.statusCode;
     switch (status) {
       case 200:

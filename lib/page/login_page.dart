@@ -90,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
       userName = "jvadd";
       password = "dddd112002";
       var result = await LoginDao.login(userName!, password!);
-      print("login-page:$result");
       if (result == null) {
         showWarnToast("登录失败，服务器返回信息为空");
         return;

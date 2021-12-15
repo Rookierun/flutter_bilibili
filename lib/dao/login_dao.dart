@@ -32,7 +32,6 @@ class LoginDao {
     var result = await HiNet().fire(request);
     if (result["code"] == 0 && result["data"] != null) {
       HiCache.getInstance().setString(BOARDING_PASS, result["data"]);
-      print("boarding-pass:${result["data"]}");
     }
     return result;
   }

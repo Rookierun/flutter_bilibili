@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bilibili/dao/login_dao.dart';
 import 'package:flutter_bilibili/db/hi_cache.dart';
-import 'package:flutter_bilibili/page/home_page.dart';
 import 'package:flutter_bilibili/page/login_page.dart';
 import 'package:flutter_bilibili/page/registration_page.dart';
 import 'package:flutter_bilibili/page/video_detail_page.dart';
 import 'package:flutter_bilibili/util/color.dart';
 import 'package:flutter_bilibili/util/toast.dart';
 
+import 'navigator/bottom_navigator.dart';
 import 'navigator/hi_navigator.dart';
 
 void main() {
@@ -85,7 +85,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     }
     var page;
     if (routeStatus == RouteStatus.home) {
-      page = pageWrap(HomePage());
+      page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.detail) {
       page = pageWrap(VideoDetailPage(videoModel));
     } else if (routeStatus == RouteStatus.registration) {

@@ -43,3 +43,36 @@ class RouteStatusInfo {
 
   RouteStatusInfo(this.status, this.page);
 }
+
+///l路由统一管理
+class HiNavigator extends _RouteJumpListener {
+  static final HiNavigator _instance = HiNavigator._internal();
+
+  factory HiNavigator() {
+    return _instance;
+  }
+  HiNavigator._internal();
+
+  late RouteJumpListener? _routeJump;
+
+  void registerRouteJump(RouteJumpListener routeJumpListener) {
+    _routeJump = routeJumpListener;
+  }
+
+  @override
+  void onJumpTo(RouteStatus status, {Map<dynamic, dynamic>? args}) {
+    (_routeJump!.onJumpTo)!(status, args: args);
+  }
+}
+
+abstract class _RouteJumpListener {
+  void onJumpTo(RouteStatus status, {Map? args});
+}
+
+typedef OnJumpTo = void Function(RouteStatus routeStatus, {Map? args});
+
+class RouteJumpListener {
+  late OnJumpTo? onJumpTo;
+
+  RouteJumpListener({this.onJumpTo});
+}

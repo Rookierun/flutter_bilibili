@@ -51,7 +51,17 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
   RouteStatus _routeStatus = RouteStatus.home;
 
   bool hasLogin = LoginDao.getBoardingPass() != null;
-  BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+  BiliRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>() {
+    //实现路由跳转
+    HiNavigator().registerRouteJump(
+        RouteJumpListener(onJumpTo: (RouteStatus routeStatus, {Map? args}) {
+      _routeStatus = routeStatus;
+      if (_routeStatus == RouteStatus.detail) {
+        videoModel = args?['videoMo'];
+      }
+      notifyListeners();
+    }));
+  }
 
   RouteStatus get routeStatus {
     hasLogin = LoginDao.getBoardingPass() != null;
@@ -75,12 +85,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     }
     var page;
     if (routeStatus == RouteStatus.home) {
-      page = pageWrap(HomePage(
-        onJumpToDetail: (videoModel) {
-          this.videoModel = videoModel;
-          notifyListeners();
-        },
-      ));
+      page = pageWrap(HomePage());
     } else if (routeStatus == RouteStatus.detail) {
       page = pageWrap(VideoDetailPage(videoModel));
     } else if (routeStatus == RouteStatus.registration) {

@@ -27,7 +27,7 @@ class HiNet {
     } on HiNetError catch (e) {
       error = e;
       response = e.data; //这里不知道为啥不能这样赋值
-      printLog(e.message);
+      printLog(e.data);
     } catch (e) {
       error = e;
       printLog(e);

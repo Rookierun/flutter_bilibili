@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bilibili/model/home_mo.dart';
 
 class HomeTabPage extends StatefulWidget {
-  String name;
+  String? name;
+  List<BannerMo>? bannerList;
 
-  HomeTabPage(this.name, {Key? key}) : super(key: key);
+  HomeTabPage({Key? key, this.name, this.bannerList}) : super(key: key);
 
   @override
   _HomeTabPageState createState() => _HomeTabPageState();
@@ -13,7 +15,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(widget.name),
+      child: Text(widget.name ?? "空的"),
     );
   }
 }

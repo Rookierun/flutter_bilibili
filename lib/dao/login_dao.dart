@@ -5,7 +5,7 @@ import 'package:flutter_bilibili/http/request/login_request.dart';
 import 'package:flutter_bilibili/http/request/registration_request.dart';
 
 class LoginDao {
-  static String BOARDING_PASS = "boarding_pass";
+  static String BOARDING_PASS = "boarding-pass";
 
   static login(String userName, String pwd) {
     return _send(userName, pwd);
@@ -32,6 +32,7 @@ class LoginDao {
     var result = await HiNet().fire(request);
     if (result["code"] == 0 && result["data"] != null) {
       HiCache.getInstance().setString(BOARDING_PASS, result["data"]);
+      print("boarding-pass:${result["data"]}");
     }
     return result;
   }

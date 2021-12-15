@@ -9,7 +9,6 @@ class HomeDao {
     request.add("pageIndex", pageIndex);
     request.add("pageSize", pageSize);
     var result = await HiNet().fire(request);
-    print('HomeDao get responese:$result');
     return HomeMo.fromJson(result['data']);
   }
 }

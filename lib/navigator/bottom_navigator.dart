@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bilibili/navigator/hi_navigator.dart';
 import 'package:flutter_bilibili/page/favorite_page.dart';
 import 'package:flutter_bilibili/page/home_page.dart';
 import 'package:flutter_bilibili/page/profile_page.dart';
@@ -17,17 +18,21 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   final _activeColor = primary;
   int _currentIndex = 0;
   final PageController _controller = PageController(initialPage: 0);
+  late List<Widget> _pages;
+  bool _hasBuild = false;
+  static int inititalPage = 0;
   @override
   Widget build(BuildContext context) {
+    _pages = [HomePage(), RankingPage(), FavoritePage(), ProfilePage()];
+    if (!_hasBuild) {
+      HiNavigator().onBottomTabChange(inititalPage, _pages[inititalPage]);
+      _hasBuild = true;
+    }
     return Scaffold(
       body: PageView(
         controller: _controller,
-        children: [HomePage(), RankingPage(), FavoritePage(), ProfilePage()],
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        children: _pages,
+        onPageChanged: (index) => _onItemTapped(index, pageChange: true),
         physics: NeverScrollableScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -39,7 +44,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         ],
         currentIndex: _currentIndex,
         selectedItemColor: _activeColor,
-        onTap: _onItemTapped,
+        onTap: (index) => _onItemTapped(index),
         type: BottomNavigationBarType.fixed,
       ),
     );
@@ -60,8 +65,12 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     );
   }
 
-  void _onItemTapped(int index) {
-    _controller.jumpToPage(index);
+  void _onItemTapped(int index, {pageChange = false}) {
+    if (!pageChange) {
+      _controller.jumpToPage(index);
+    } else {
+      HiNavigator().onBottomTabChange(index, _pages[index]);
+    }
     setState(() {
       _currentIndex = index;
     });

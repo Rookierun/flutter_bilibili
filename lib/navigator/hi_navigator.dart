@@ -4,6 +4,7 @@ import 'package:flutter_bilibili/page/login_page.dart';
 import 'package:flutter_bilibili/page/registration_page.dart';
 import 'package:flutter_bilibili/page/video_detail_page.dart';
 
+typedef RouteChangeListener(RouteStatusInfo current, RouteStatusInfo? pre);
 pageWrap(Widget child) {
   return MaterialPage(key: ValueKey(child.hashCode), child: child);
 }
@@ -46,6 +47,8 @@ class RouteStatusInfo {
 
 ///l路由统一管理
 class HiNavigator extends _RouteJumpListener {
+  List<RouteChangeListener> _listeners = [];
+  RouteStatusInfo? _current;
   static final HiNavigator _instance = HiNavigator._internal();
 
   factory HiNavigator() {
@@ -54,6 +57,32 @@ class HiNavigator extends _RouteJumpListener {
   HiNavigator._internal();
 
   late RouteJumpListener? _routeJump;
+
+  void addListener(RouteChangeListener listener) {
+    if (!_listeners.contains(listener)) {
+      _listeners.add(listener);
+    }
+  }
+
+  void removeListener(RouteChangeListener listener) {
+    _listeners.remove(listener);
+  }
+
+  void notify(List<MaterialPage> currPages, List<MaterialPage> prePages) {
+    if (currPages == prePages) {
+      return;
+    }
+    var current =
+        RouteStatusInfo(getStatus(currPages.last), currPages.last.child);
+    _notify(current);
+  }
+
+  void _notify(RouteStatusInfo current) {
+    for (var element in _listeners) {
+      element(current, _current);
+    }
+    _current = current;
+  }
 
   void registerRouteJump(RouteJumpListener routeJumpListener) {
     _routeJump = routeJumpListener;

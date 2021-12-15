@@ -56,7 +56,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     HiNavigator().registerRouteJump(
         RouteJumpListener(onJumpTo: (RouteStatus routeStatus, {Map? args}) {
       _routeStatus = routeStatus;
-      if (_routeStatus == RouteStatus.detail) {
+      if (routeStatus == RouteStatus.detail) {
         videoModel = args?['videoMo'];
       }
       notifyListeners();
@@ -94,6 +94,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
       page = pageWrap(LoginPage());
     }
     tempPages = [...tempPages, page];
+    HiNavigator().notify(tempPages, pages);
     pages = tempPages;
     return WillPopScope(
       child: Navigator(
@@ -110,7 +111,9 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
           if (!didPop) {
             return false;
           }
+          var tempPages = [...pages];
           pages.removeLast();
+          HiNavigator().notify(pages, tempPages);
           return true;
         },
       ),

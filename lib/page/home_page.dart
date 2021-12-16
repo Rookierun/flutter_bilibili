@@ -59,7 +59,6 @@ class _HomePageState extends HiState<HomePage>
           Container(
             color: Colors.white,
             child: _tabBar(),
-            padding: const EdgeInsets.only(top: 30),
           ),
           Flexible(
             child: TabBarView(

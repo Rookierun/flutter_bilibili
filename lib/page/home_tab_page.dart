@@ -19,7 +19,8 @@ class HomeTabPage extends StatefulWidget {
   _HomeTabPageState createState() => _HomeTabPageState();
 }
 
-class _HomeTabPageState extends HiState<HomeTabPage> {
+class _HomeTabPageState extends HiState<HomeTabPage>
+    with AutomaticKeepAliveClientMixin {
   List<VideoModel> videoList = [];
   int pageIndex = 1;
   @override
@@ -90,4 +91,8 @@ class _HomeTabPageState extends HiState<HomeTabPage> {
       print("loadData hiNetError exception:$e");
     }
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

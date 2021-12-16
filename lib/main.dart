@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bilibili/dao/login_dao.dart';
 import 'package:flutter_bilibili/db/hi_cache.dart';
+import 'package:flutter_bilibili/model/video_model.dart';
 import 'package:flutter_bilibili/page/login_page.dart';
 import 'package:flutter_bilibili/page/registration_page.dart';
 import 'package:flutter_bilibili/page/video_detail_page.dart';
@@ -46,7 +47,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
-  var videoModel;
+  VideoModel? videoModel;
   List<MaterialPage> pages = [];
   RouteStatus _routeStatus = RouteStatus.home;
 
@@ -87,7 +88,7 @@ class BiliRouteDelegate extends RouterDelegate<BiliRoutePath>
     if (routeStatus == RouteStatus.home) {
       page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.detail) {
-      page = pageWrap(VideoDetailPage(videoModel));
+      page = pageWrap(VideoDetailPage(videoModel!));
     } else if (routeStatus == RouteStatus.registration) {
       page = pageWrap(RegistrationPage());
     } else if (routeStatus == RouteStatus.login) {

@@ -8,13 +8,15 @@ import 'package:flutter_bilibili/navigator/hi_navigator.dart';
 import 'package:flutter_bilibili/page/home_tab_page.dart';
 import 'package:flutter_bilibili/util/color.dart';
 import 'package:flutter_bilibili/util/toast.dart';
+import 'package:flutter_bilibili/widget/navigation_bar.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final ValueChanged<int>? onJumpTo;
+  const HomePage({Key? key, this.onJumpTo}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<StatefulWidget> createState() => _HomePageState();
 }
 
 class _HomePageState extends HiState<HomePage>
@@ -23,6 +25,7 @@ class _HomePageState extends HiState<HomePage>
   late TabController _controller;
   List<CategoryMo> categoryList = [];
   List<BannerMo> bannerList = [];
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +50,12 @@ class _HomePageState extends HiState<HomePage>
     return Scaffold(
       body: Column(
         children: [
+          NavigationBar(
+            height: 50,
+            child: _appBar(),
+            color: Colors.white,
+            statusStyle: StatusStyle.DARK_CONTENT,
+          ),
           Container(
             color: Colors.white,
             child: _tabBar(),
@@ -112,5 +121,48 @@ class _HomePageState extends HiState<HomePage>
     } on HiNetError catch (e) {
       print("loadData hiNetError exception:$e");
     }
+  }
+
+  _appBar() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 15, left: 15),
+      child: Row(
+        children: [
+          InkWell(
+            onTap: () {
+              if (widget.onJumpTo != null) {
+                widget.onJumpTo!(3);
+              }
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(23),
+              child: const Image(
+                  width: 46,
+                  height: 46,
+                  image: AssetImage('images/avatar.png')),
+            ),
+          ),
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Container(
+                padding: const EdgeInsets.only(left: 10),
+                height: 32,
+                alignment: Alignment.centerLeft,
+                child: const Icon(Icons.search, color: Colors.grey),
+                decoration: BoxDecoration(color: Colors.grey[100]),
+              ),
+            ),
+          )),
+          const Icon(Icons.explore_outlined, color: Colors.grey),
+          const Padding(
+            padding: EdgeInsets.only(left: 12),
+            child: Icon(Icons.mail_outline, color: Colors.grey),
+          )
+        ],
+      ),
+    );
   }
 }

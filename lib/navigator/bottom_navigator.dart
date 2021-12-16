@@ -23,7 +23,14 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   static int inititalPage = 0;
   @override
   Widget build(BuildContext context) {
-    _pages = [HomePage(), RankingPage(), FavoritePage(), ProfilePage()];
+    _pages = [
+      HomePage(
+        onJumpTo: (index) => _onItemTapped(index, pageChange: false),
+      ),
+      RankingPage(),
+      FavoritePage(),
+      ProfilePage()
+    ];
     if (!_hasBuild) {
       HiNavigator().onBottomTabChange(inititalPage, _pages[inititalPage]);
       _hasBuild = true;

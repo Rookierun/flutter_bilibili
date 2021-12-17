@@ -3,13 +3,13 @@ import 'package:flutter_statusbar_manager/flutter_statusbar_manager.dart';
 
 enum StatusStyle { LIGHT_CONTENT, DARK_CONTENT }
 
-class NavigationBar extends StatelessWidget {
+class BiLiNavigationBar extends StatelessWidget {
   final StatusStyle statusStyle;
   final Color color;
   final double height;
   late Widget? child;
 
-  NavigationBar(
+  BiLiNavigationBar(
       {Key? key,
       this.statusStyle = StatusStyle.DARK_CONTENT,
       this.color = Colors.white,

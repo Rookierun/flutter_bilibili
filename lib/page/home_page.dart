@@ -8,7 +8,7 @@ import 'package:flutter_bilibili/navigator/hi_navigator.dart';
 import 'package:flutter_bilibili/page/home_tab_page.dart';
 import 'package:flutter_bilibili/util/color.dart';
 import 'package:flutter_bilibili/util/toast.dart';
-import 'package:flutter_bilibili/widget/navigation_bar.dart';
+import 'package:flutter_bilibili/widget/bili_navigation_bar.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -50,7 +50,7 @@ class _HomePageState extends HiState<HomePage>
     return Scaffold(
       body: Column(
         children: [
-          NavigationBar(
+          BiLiNavigationBar(
             height: 50,
             child: _appBar(),
             color: Colors.white,

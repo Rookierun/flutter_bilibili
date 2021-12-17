@@ -6,8 +6,10 @@ import 'package:flutter_bilibili/http/core/hi_error.dart';
 import 'package:flutter_bilibili/model/home_mo.dart';
 import 'package:flutter_bilibili/navigator/hi_navigator.dart';
 import 'package:flutter_bilibili/page/home_tab_page.dart';
+import 'package:flutter_bilibili/page/video_detail_page.dart';
 import 'package:flutter_bilibili/util/color.dart';
 import 'package:flutter_bilibili/util/toast.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
 import 'package:flutter_bilibili/widget/bili_navigation_bar.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 
@@ -20,17 +22,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends HiState<HomePage>
-    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
+    with
+        AutomaticKeepAliveClientMixin,
+        TickerProviderStateMixin,
+        WidgetsBindingObserver {
   var listener;
   late TabController _controller;
   List<CategoryMo> categoryList = [];
   List<BannerMo> bannerList = [];
-
+  Widget? _currentPage;
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
     _controller = TabController(length: categoryList.length, vsync: this);
     HiNavigator().addListener(listener = (current, pre) {
+      _currentPage = current.page;
       if (widget == current.page || current.page is HomePage) {
       } else if (widget == pre?.page || pre?.page is HomePage) {}
     });
@@ -38,8 +45,33 @@ class _HomePageState extends HiState<HomePage>
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.detached:
+        print("home_page :detached ");
+        break;
+      case AppLifecycleState.inactive:
+        print("home_page :inactive ");
+        break;
+      case AppLifecycleState.resumed:
+        if (_currentPage == null) {
+          return;
+        }
+        if (_currentPage is! VideoDetailPage) {
+          changeStatusBar(
+              color: Colors.white, statusStyle: StatusStyle.DARK_CONTENT);
+        }
+        break;
+      case AppLifecycleState.paused:
+        print("home_page :paused ");
+        break;
+    }
+  }
+
+  @override
   void dispose() {
     super.dispose();
+    WidgetsBinding.instance?.removeObserver(this);
     HiNavigator().removeListener((current, pre) => listener);
     _controller.dispose();
   }

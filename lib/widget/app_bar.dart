@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
 
 appBar(String title, String rightTitle, VoidCallback? rightButtonClick) {
   return AppBar(
@@ -20,5 +21,39 @@ appBar(String title, String rightTitle, VoidCallback? rightButtonClick) {
         ),
       )
     ],
+  );
+}
+
+videoAppBar({VoidCallback? onBack}) {
+  return Container(
+    padding: const EdgeInsets.only(left: 0, right: 8),
+    decoration: BoxDecoration(
+      gradient: blackLinearGradient(fromTop: true),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const BackButton(
+          color: Colors.white,
+        ),
+        Row(
+          children: const [
+            Icon(
+              Icons.live_tv_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: Icon(
+                Icons.more_vert_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
+            )
+          ],
+        )
+      ],
+    ),
   );
 }

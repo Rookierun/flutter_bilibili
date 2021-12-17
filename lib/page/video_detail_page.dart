@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bilibili/model/video_model.dart';
+import 'package:flutter_bilibili/widget/app_bar.dart';
+import 'package:flutter_bilibili/widget/bili_navigation_bar.dart';
 import 'package:flutter_bilibili/widget/video_view.dart';
 
 class VideoDetailPage extends StatefulWidget {
@@ -14,15 +18,21 @@ class VideoDetailPage extends StatefulWidget {
 class _VideoDetailPageState extends State<VideoDetailPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(),
-        body: Column(
+    return MediaQuery.removePadding(
+        removeTop: Platform.isIOS,
+        context: context,
+        child: Scaffold(
+            body: Column(
           children: [
+            BiLiNavigationBar(
+              statusStyle: StatusStyle.LIGHT_CONTENT,
+              color: Colors.black,
+            ),
+            _videoView(),
             Text('视频详情页，vid:${widget.videoModel.vid}'),
             Text('视频详情页，title:${widget.videoModel.title}'),
-            _videoView(),
           ],
-        ));
+        )));
   }
 
   _videoView() {
@@ -30,6 +40,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
     return VideoView(
       model.url!,
       cover: model.cover,
+      overLayUI: videoAppBar(),
     );
   }
 }

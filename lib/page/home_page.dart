@@ -6,6 +6,7 @@ import 'package:flutter_bilibili/http/core/hi_error.dart';
 import 'package:flutter_bilibili/model/home_mo.dart';
 import 'package:flutter_bilibili/navigator/hi_navigator.dart';
 import 'package:flutter_bilibili/page/home_tab_page.dart';
+import 'package:flutter_bilibili/page/profile_page.dart';
 import 'package:flutter_bilibili/page/video_detail_page.dart';
 import 'package:flutter_bilibili/util/color.dart';
 import 'package:flutter_bilibili/util/toast.dart';
@@ -40,6 +41,10 @@ class _HomePageState extends HiState<HomePage>
       _currentPage = current.page;
       if (widget == current.page || current.page is HomePage) {
       } else if (widget == pre?.page || pre?.page is HomePage) {}
+      if (pre?.page is VideoDetailPage && current.page is! ProfilePage) {
+        var statusStyle = StatusStyle.DARK_CONTENT;
+        changeStatusBar(color: Colors.white, statusStyle: statusStyle);
+      }
     });
     loadData();
   }

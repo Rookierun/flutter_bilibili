@@ -95,7 +95,6 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       if (result != null && result['code'] == 0) {
-        print('login-page:登录成功');
         showToast('登录成功');
         HiNavigator().onJumpTo(RouteStatus.home);
       } else {

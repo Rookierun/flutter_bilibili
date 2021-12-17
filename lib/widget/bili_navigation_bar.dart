@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_statusbar_manager/flutter_statusbar_manager.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
 
 enum StatusStyle { LIGHT_CONTENT, DARK_CONTENT }
 
-class BiLiNavigationBar extends StatelessWidget {
+class BiLiNavigationBar extends StatefulWidget {
   final StatusStyle statusStyle;
   final Color color;
   final double height;
@@ -18,22 +18,31 @@ class BiLiNavigationBar extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  _BiLiNavigationBarState createState() => _BiLiNavigationBarState();
+}
+
+class _BiLiNavigationBarState extends State<BiLiNavigationBar> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     _statusBarInit();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     var top = MediaQuery.of(context).padding.top;
+
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: top + height,
-      child: child,
+      height: top + widget.height,
+      child: widget.child,
       padding: EdgeInsets.only(top: top),
-      decoration: BoxDecoration(color: color),
+      decoration: BoxDecoration(color: widget.color),
     );
   }
 
   void _statusBarInit() {
-    FlutterStatusbarManager.setColor(color, animated: false);
-    FlutterStatusbarManager.setStyle(statusStyle == StatusStyle.DARK_CONTENT
-        ? StatusBarStyle.DARK_CONTENT
-        : StatusBarStyle.LIGHT_CONTENT);
+    changeStatusBar(color: widget.color, statusStyle: widget.statusStyle);
   }
 }

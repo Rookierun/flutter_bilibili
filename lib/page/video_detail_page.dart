@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bilibili/model/video_model.dart';
+import 'package:flutter_bilibili/util/view_util.dart';
 import 'package:flutter_bilibili/widget/app_bar.dart';
 import 'package:flutter_bilibili/widget/bili_navigation_bar.dart';
 import 'package:flutter_bilibili/widget/video_view.dart';
@@ -17,6 +18,14 @@ class VideoDetailPage extends StatefulWidget {
 
 class _VideoDetailPageState extends State<VideoDetailPage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    changeStatusBar(
+        color: Colors.black, statusStyle: StatusStyle.LIGHT_CONTENT);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MediaQuery.removePadding(
         removeTop: Platform.isIOS,
@@ -25,6 +34,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
             body: Column(
           children: [
             BiLiNavigationBar(
+              height: Platform.isIOS ? 46 : 0,
               statusStyle: StatusStyle.LIGHT_CONTENT,
               color: Colors.black,
             ),

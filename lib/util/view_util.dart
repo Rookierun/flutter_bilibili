@@ -14,3 +14,15 @@ Widget cachedImage(String url, {double? width, double? height}) {
         const Icon(Icons.error),
   );
 }
+
+blackLinearGradient({bool fromTop = false}) {
+  return LinearGradient(
+      begin: fromTop ? Alignment.topCenter : Alignment.bottomCenter,
+      end: fromTop ? Alignment.bottomCenter : Alignment.topCenter,
+      colors: const [
+        Colors.black54,
+        Colors.black45,
+        Colors.black38,
+        Colors.transparent
+      ]);
+}

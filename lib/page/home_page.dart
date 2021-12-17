@@ -8,11 +8,10 @@ import 'package:flutter_bilibili/navigator/hi_navigator.dart';
 import 'package:flutter_bilibili/page/home_tab_page.dart';
 import 'package:flutter_bilibili/page/profile_page.dart';
 import 'package:flutter_bilibili/page/video_detail_page.dart';
-import 'package:flutter_bilibili/util/color.dart';
 import 'package:flutter_bilibili/util/toast.dart';
 import 'package:flutter_bilibili/util/view_util.dart';
 import 'package:flutter_bilibili/widget/bili_navigation_bar.dart';
-import 'package:underline_indicator/underline_indicator.dart';
+import 'package:flutter_bilibili/widget/hi_tab.dart';
 
 class HomePage extends StatefulWidget {
   final ValueChanged<int>? onJumpTo;
@@ -117,22 +116,17 @@ class _HomePageState extends HiState<HomePage>
   bool get wantKeepAlive => true;
 
   _tabBar() {
-    return TabBar(
-      controller: _controller,
-      isScrollable: true,
-      indicator: const UnderlineIndicator(
-          strokeCap: StrokeCap.round,
-          borderSide: BorderSide(color: primary, width: 3),
-          insets: EdgeInsets.only(left: 15, right: 15)),
-      tabs: categoryList.map<Tab>((tab) {
+    return HiTab(
+      categoryList.map<Tab>((e) {
         return Tab(
-            child: Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: Text(
-                  tab.name ?? "空的",
-                  style: const TextStyle(fontSize: 16),
-                )));
+          child: Text(e.name ?? ""),
+        );
       }).toList(),
+      controller: _controller,
+      fontSize: 16,
+      borderWidth: 3,
+      unSelectedLabelColor: Colors.black54,
+      insets: 13,
     );
   }
 

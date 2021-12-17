@@ -5,6 +5,7 @@ import 'package:flutter_bilibili/model/video_model.dart';
 import 'package:flutter_bilibili/util/view_util.dart';
 import 'package:flutter_bilibili/widget/app_bar.dart';
 import 'package:flutter_bilibili/widget/bili_navigation_bar.dart';
+import 'package:flutter_bilibili/widget/hi_tab.dart';
 import 'package:flutter_bilibili/widget/video_view.dart';
 
 class VideoDetailPage extends StatefulWidget {
@@ -16,11 +17,15 @@ class VideoDetailPage extends StatefulWidget {
   _VideoDetailPageState createState() => _VideoDetailPageState();
 }
 
-class _VideoDetailPageState extends State<VideoDetailPage> {
+class _VideoDetailPageState extends State<VideoDetailPage>
+    with TickerProviderStateMixin {
+  List<String> tabs = ["简介", "评论"];
+  late TabController _controller;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _controller = TabController(length: tabs.length, vsync: this);
     changeStatusBar(
         color: Colors.black, statusStyle: StatusStyle.LIGHT_CONTENT);
   }
@@ -38,19 +43,55 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
               statusStyle: StatusStyle.LIGHT_CONTENT,
               color: Colors.black,
             ),
-            _videoView(),
-            Text('视频详情页，vid:${widget.videoModel.vid}'),
-            Text('视频详情页，title:${widget.videoModel.title}'),
+            _buildVideoView(),
+            _buildTabView()
           ],
         )));
   }
 
-  _videoView() {
+  _buildVideoView() {
     var model = widget.videoModel;
     return VideoView(
       model.url!,
       cover: model.cover,
       overLayUI: videoAppBar(),
+    );
+  }
+
+  _buildTabView() {
+    return Material(
+      elevation: 5,
+      shadowColor: Colors.red,
+      child: Container(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: 20),
+        color: Colors.white,
+        height: 39,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _tabBar(),
+            const Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: Icon(
+                Icons.live_tv_rounded,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _tabBar() {
+    return HiTab(
+      tabs.map<Tab>((tab) {
+        return Tab(
+          text: tab,
+        );
+      }).toList(),
+      controller: _controller,
     );
   }
 }

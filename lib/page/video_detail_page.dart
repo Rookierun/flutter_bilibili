@@ -52,7 +52,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   _buildVideoView() {
     var model = widget.videoModel;
     return VideoView(
-      model.url!,
+      model.url ?? "",
       cover: model.cover,
       overLayUI: videoAppBar(),
     );

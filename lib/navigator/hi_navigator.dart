@@ -3,6 +3,7 @@ import 'package:flutter_bilibili/navigator/bottom_navigator.dart';
 import 'package:flutter_bilibili/page/login_page.dart';
 import 'package:flutter_bilibili/page/registration_page.dart';
 import 'package:flutter_bilibili/page/video_detail_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 typedef RouteChangeListener(RouteStatusInfo current, RouteStatusInfo? pre);
 pageWrap(Widget child) {
@@ -100,6 +101,15 @@ class HiNavigator extends _RouteJumpListener {
   @override
   void onJumpTo(RouteStatus status, {Map<dynamic, dynamic>? args}) {
     (_routeJump!.onJumpTo)!(status, args: args);
+  }
+
+  Future<bool> openH5(String url) async {
+    var result = await canLaunch(url);
+    if (result) {
+      return await launch(url);
+    } else {
+      return Future.value(false);
+    }
   }
 }
 

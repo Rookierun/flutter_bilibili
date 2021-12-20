@@ -6,6 +6,7 @@ import 'package:flutter_bilibili/util/view_util.dart';
 import 'package:flutter_bilibili/widget/app_bar.dart';
 import 'package:flutter_bilibili/widget/bili_navigation_bar.dart';
 import 'package:flutter_bilibili/widget/hi_tab.dart';
+import 'package:flutter_bilibili/widget/video_header.dart';
 import 'package:flutter_bilibili/widget/video_view.dart';
 
 class VideoDetailPage extends StatefulWidget {
@@ -44,7 +45,18 @@ class _VideoDetailPageState extends State<VideoDetailPage>
               color: Colors.black,
             ),
             _buildVideoView(),
-            _buildTabView()
+            _buildTabView(),
+            Flexible(
+              child: TabBarView(
+                controller: _controller,
+                children: [
+                  _buildList(),
+                  Container(
+                    child: const Text('敬请期待...'),
+                  )
+                ],
+              ),
+            )
           ],
         )));
   }
@@ -93,5 +105,20 @@ class _VideoDetailPageState extends State<VideoDetailPage>
       }).toList(),
       controller: _controller,
     );
+  }
+
+  _buildList() {
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [..._buildListContent()],
+    );
+  }
+
+  _buildListContent() {
+    return [
+      Container(
+        child: VideoHeader(widget.videoModel.owner!),
+      )
+    ];
   }
 }
